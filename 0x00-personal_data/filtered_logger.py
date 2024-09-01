@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
+
 """Filtering module
 """
 
+import logging
+import mysql.connector
 import os
 import re
-import mysql.connector
 from typing import List
-import logging
 
 
 def filter_datum(
