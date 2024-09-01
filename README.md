@@ -1,2 +1,2 @@
 # alx-backend-user-data
-User data. For authentication and authorization
+User data for authentication and authorization
