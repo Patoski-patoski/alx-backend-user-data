@@ -1,4 +1,3 @@
-# api/vi/app.py
 # !/usr/bin/env python3
 """
 Route module for the API
@@ -25,6 +24,7 @@ if AUTH_TYPE == "auth":
 
 @app.before_request
 def before_request_function():
+    """function to filter each requests"""
     if auth is None:
         return
     lists = ["/api/v1/status/", "/api/v1/unauthorized/",
