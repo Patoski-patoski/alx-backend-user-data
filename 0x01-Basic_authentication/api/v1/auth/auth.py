@@ -29,13 +29,17 @@ class Auth:
         return False
 
     def authorization_header(self, request=None) -> str:
-        """_summary_
+        """authorization_header:  validate all requests to secure the API:
         Args:
-            request (_type_, optional): _description_. Defaults to None.
-
+            request (object, optional): Defaults to None.
         Returns:
-            str: _description_
+            str: value of Authorized header
         """
+        if request is None:
+            return None
+        if 'Authorization' not in request.headers:
+            return None
+        return request.headers.get('Authorization')
         return None
 
     def current_user(self, request=None) -> TypeVar("User"):
