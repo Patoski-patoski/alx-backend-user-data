@@ -98,6 +98,13 @@ class BasicAuth(Auth):
         return None
 
     def current_user(self, request=None) -> User:
+        """current_user: retrieves the current user
+
+        Args:
+            request (optional):. Defaults to None.
+        Returns:
+            User: User details
+        """
         if request is None:
             return None
         auth_header = self.authorization_header(request)
