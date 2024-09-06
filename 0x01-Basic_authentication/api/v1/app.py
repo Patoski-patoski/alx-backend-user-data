@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+# api/vi/app.py
+# !/usr/bin/env python3
 """
 Route module for the API
 """
@@ -20,11 +21,13 @@ AUTH_TYPE = os.getenv('AUTH_TYPE')
 if AUTH_TYPE == "auth":
     from api.v1.auth.auth import Auth
     auth = Auth()
+elif AUTH_TYPE == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
 
 
 @app.before_request
 def before_request_function():
-    """function to filter each requests"""
     if auth is None:
         return
     lists = ["/api/v1/status/", "/api/v1/unauthorized/",
