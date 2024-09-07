@@ -25,6 +25,7 @@ elif AUTH_TYPE == "basic_auth":
 
 @app.before_request
 def before_request_function():
+    """ before request function"""
     if auth is None:
         return
     lists = ["/api/v1/status/", "/api/v1/unauthorized/",
