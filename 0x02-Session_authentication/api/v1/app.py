@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+# api/vi/app.py
+# !/usr/bin/env python3
 """
 Route module for the API
 """
@@ -27,7 +28,6 @@ elif AUTH_TYPE == "basic_auth":
 
 @app.before_request
 def before_request_function():
-    """for the filtering of each request"""
     if auth is None:
         return
     lists = ["/api/v1/status/", "/api/v1/unauthorized/",
@@ -36,6 +36,7 @@ def before_request_function():
         return
     if auth.authorization_header(request) is None:
         abort(401)
+    request.current_user = auth.current_user(request)
     if auth.current_user(request) is None:
         abort(403)
 
