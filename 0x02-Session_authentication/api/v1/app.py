@@ -2,10 +2,11 @@
 """
 Route module for the API
 """
+
 from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
-from flask_cors import (CORS, cross_origin)
+from flask_cors import CORS, cross_origin
 import os
 
 
@@ -15,39 +16,46 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
 auth = None
-AUTH_TYPE = os.getenv('AUTH_TYPE')
+AUTH_TYPE = os.getenv("AUTH_TYPE")
 
 if AUTH_TYPE == "auth":
     from api.v1.auth.auth import Auth
+
     auth = Auth()
 elif AUTH_TYPE == "basic_auth":
     from api.v1.auth.basic_auth import BasicAuth
+
     auth = BasicAuth()
 elif AUTH_TYPE == "session_auth":
     from api.v1.auth.session_auth import SessionAuth
+
     auth = SessionAuth()
 
 
 @app.before_request
-def before_request_function():
-    """function to executed before requests"""
+def before_request():
+    """Before request handler"""
     if auth is None:
         return
-    lists = [
-        "/api/v1/status/",
-        "/api/v1/unauthorized/",
-        "/api/v1/forbidden/",
-        "/api/v1/auth_session/login/",
-    ]
-    if auth.authorization_header(request) and auth.session_cookie(request):
-        return None
-    if not auth.require_auth(request.path, lists):
-        return
-    if auth.authorization_header(request) is None:
-        abort(401)
-    request.current_user = auth.current_user(request)
-    if auth.current_user(request) is None:
-        abort(403)
+    user = auth.current_user(request)
+    if auth.require_auth(
+        request.path,
+        [
+            "/api/v1/status/",
+            "/api/v1/unauthorized/",
+            "/api/v1/forbidden/",
+            "/api/v1/auth_session/login/",
+            "/api/v1/auth_session/logout/",
+        ],
+    ):
+        if (
+            auth.authorization_header(request) is None
+            and auth.session_cookie(request) is None
+        ):
+            abort(401)
+        if user is None:
+            abort(403)
+    request.current_user = user
 
 
 @app.errorhandler(404)
