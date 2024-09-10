@@ -70,3 +70,19 @@ class DB:
             raise NoResultFound("No user found matching the criteria")
 
         return user
+
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """To locate the user to update
+        Args:
+            user_id (int): user id
+        """
+        try:
+            user = self.find_user_by(id=user_id)
+        except (NoResultFound, InvalidRequestError, ValueError):
+            return
+
+        user = str(user.id)
+        for key, value in kwargs.items():
+            if not hasattr(User, key):
+                raise ValueError(f"Invalid field: {key}")
+            setattr(User, user, value)
