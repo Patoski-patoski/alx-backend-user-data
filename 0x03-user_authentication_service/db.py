@@ -43,7 +43,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **keyword) -> str:
+    def find_user_by(self, **kwargs) -> str:
         """Find user by arbitrary keyword arguments.
         Args:
             **keyword: Arbitrary keyword arguments for filtering.
@@ -55,12 +55,12 @@ class DB:
             NoResultFound: If no user matches the criteria.
             InvalidRequestError: If invalid query arguments are provided.
         """
-        if not keyword:
+        if not kwargs:
             raise InvalidRequestError("No query argument provided")
 
         query = self._session.query(User)
 
-        for key, value in keyword.items():
+        for key, value in kwargs.items():
             if not hasattr(User, key):
                 raise InvalidRequestError(f"Invalif field: {key}")
             query = query.filter(getattr(User, key) == value)
