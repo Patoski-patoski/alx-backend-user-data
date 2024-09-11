@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """app module"""
 
-from auth import Auth
-from flask import Flask, jsonify, request, abort, make_response
-from sqlalchemy.exc import InvalidRequestError
+from auth import Auth, DB
+from flask import Flask, jsonify, request, abort
 
 
 app = Flask(__name__)
@@ -35,7 +34,7 @@ def users() -> str:
 
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login() -> str:
-    """login: User login route"""
+    """login: User login function"""
     email = request.form.get("email")
     password = request.form.get("password")
 
@@ -43,12 +42,23 @@ def login() -> str:
         if AUTH.valid_login(email, password):
             session_id = AUTH.create_session(email)
             response = jsonify({"email": email, "message": "logged in"})
-            response.set_cookie('session_id', session_id)
+            response.set_cookie("session_id", session_id)
             return response
         else:
             abort(401)
     else:
         abort(401)
+
+
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    """logout: User logout function"""
+    session_id = request.cookies.get("session_id")
+    user = AUTH.get_user_from_session_id(session_id)
+    if user:
+        AUTH.destroy_session(user.id)
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":
