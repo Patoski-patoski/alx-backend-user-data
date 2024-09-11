@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """app module"""
 
+from auth import Auth
 from flask import Flask, jsonify, request
 
-
 app = Flask(__name__)
+AUTH = Auth()
 
 
 @app.route("/")
@@ -30,7 +31,4 @@ def users() -> str:
 
 
 if __name__ == "__main__":
-    from auth import Auth
-
-    AUTH = Auth()
     app.run(host="0.0.0.0", port="5000")
