@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """app module"""
 
-from auth import Auth, DB
-from flask import Flask, jsonify, request, abort, redirect
+from flask import Flask, jsonify, request, abort, redirect, url_for
 
 
 app = Flask(__name__)
-AUTH = Auth()
 
 
 @app.route("/")
@@ -57,11 +55,12 @@ def logout():
     user = AUTH.get_user_from_session_id(session_id)
     if user:
         AUTH.destroy_session(user.id)
-        return redirect("set_up")
+        return redirect(url_for('set_up'))
     else:
         abort(403)
 
 
 if __name__ == "__main__":
+    from auth import Auth
     AUTH = Auth()
     app.run(host="0.0.0.0", port="5000", debug=True)
