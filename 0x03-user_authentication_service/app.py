@@ -2,7 +2,8 @@
 """app module"""
 
 from auth import Auth
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
+
 
 app = Flask(__name__)
 AUTH = Auth()
@@ -16,17 +17,38 @@ def set_up():
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
 def users() -> str:
-    """User registration
-    """
-    try:
-        email = request.form.get("email")
-        password = request.form.get("password")
-        AUTH.register_user(email, password)
-        payload = {"email": email, "message": "user created"}
-        return jsonify(payload), 200
-    except ValueError:
-        return jsonify({"message": "email already registered"}), 400
+    """User registration route"""
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if email and password:
+        try:
+            AUTH.register_user(email, password)
+            payload = {"email": f"{email}", "message": "user created"}
+            return jsonify(payload), 201
+        except ValueError:
+            return jsonify({"message": "email already registered"}), 400
+    else:
+        return jsonify({"message": "email and password required"}), 400
+
+
+@app.route("/sessions", methods=["POST"], strict_slashes=False)
+def login_user() -> str:
+    """login: User login route"""
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    if email and password:
+        try:
+            AUTH.valid_login(email, password)
+            AUTH.create_session(email)
+            return jsonify({"email": email, "message": "logged in"})
+        except ValueError:
+            abort(401)
+    else:
+        abort(401)
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="5000")
+    AUTH = Auth()
+    app.run(host="0.0.0.0", port="5000", debug=True)
