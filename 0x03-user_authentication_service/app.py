@@ -21,7 +21,7 @@ def users():
     if email and password:
         try:
             AUTH.register_user(email, password)
-            payload = {"email": email, "message": "user created"}
+            payload = {"email": f"{email}", "message": "user created"}
             return jsonify(payload), 201
         except ValueError:
             return jsonify({"message": "email already registered"}), 400
@@ -33,4 +33,4 @@ if __name__ == "__main__":
     from auth import Auth
 
     AUTH = Auth()
-    app.run(host="0.0.0.0", port="5000", debug=True)
+    app.run(host="0.0.0.0", port="5000")
