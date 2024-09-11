@@ -21,13 +21,13 @@ def users() -> str:
 
     if email and password:
         try:
+            email = request.form.get("email")
+            password = request.form.get("password")
             AUTH.register_user(email, password)
             payload = {"email": f"{email}", "message": "user created"}
             return jsonify(payload), 201
         except ValueError:
             return jsonify({"message": "email already registered"}), 400
-    else:
-        return jsonify({"message": "email and password required"}), 400
 
 
 if __name__ == "__main__":
