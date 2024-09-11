@@ -18,7 +18,6 @@ def set_up():
 def users() -> str:
     """User registration
     """
-    if email and password:
         try:
             email = request.form.get("email")
             password = request.form.get("password")
