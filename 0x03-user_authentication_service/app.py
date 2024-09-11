@@ -2,7 +2,7 @@
 """app module"""
 
 from auth import Auth
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, make_response
 from sqlalchemy.exc import InvalidRequestError
 
 
@@ -42,7 +42,9 @@ def login() -> str:
     if email and password:
         if AUTH.valid_login(email, password):
             session_id = AUTH.create_session(email)
-            return jsonify({"email": email, "message": "logged in"})
+            response = jsonify({"email": email, "message": "logged in"})
+            response.set_cookie('session_id', session_id)
+            return response
         else:
             abort(401)
     else:
