@@ -16,9 +16,8 @@ def set_up():
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
 def users() -> str:
-    email = request.form.get("email")
-    password = request.form.get("password")
-
+    """User registration
+    """
     if email and password:
         try:
             email = request.form.get("email")
