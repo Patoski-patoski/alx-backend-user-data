@@ -2,6 +2,7 @@
 """DB module"""
 
 import bcrypt
+import uuid
 from db import DB, User
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -56,3 +57,8 @@ class Auth:
                 return False
         except NoResultFound:
             return False
+    
+    def _generate_uuid() -> str:
+        """generate a strin representation of uuid
+        """
+        return uuid.uuid4()
