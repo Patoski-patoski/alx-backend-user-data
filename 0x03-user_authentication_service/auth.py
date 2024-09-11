@@ -57,8 +57,8 @@ class Auth:
                 return False
         except NoResultFound:
             return False
-    
-def _generate_uuid() -> str:
-    """generate a strin representation of uuid
-    """
+
+    def _generate_uuid() -> str:
+        """generate a strin representation of uuid
+        """
     return str(uuid.uuid4())
