@@ -3,6 +3,7 @@
 
 from auth import Auth
 from flask import Flask, jsonify, request, abort
+from sqlalchemy.exc import InvalidRequestError
 
 
 app = Flask(__name__)
@@ -39,11 +40,10 @@ def login_user() -> str:
     password = request.form.get("password")
 
     if email and password:
-        try:
-            AUTH.valid_login(email, password)
-            AUTH.create_session(email)
+        if AUTH.valid_login(email, password):
+            session_id = AUTH.create_session(email)
             return jsonify({"email": email, "message": "logged in"})
-        except ValueError:
+        else:
             abort(401)
     else:
         abort(401)
