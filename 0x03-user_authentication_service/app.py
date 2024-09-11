@@ -9,7 +9,7 @@ AUTH = Auth()
 
 
 @app.route("/")
-def set_up():
+def index():
     """return a JSON payload"""
     return jsonify({"message": "Bienvenue"})
 
