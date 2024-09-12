@@ -91,7 +91,7 @@ def update_password():
     reset_token = request.form.get("reset_token")
 
     if not email or new_password or reset_token:
-        abort(400)
+        abort(403)
     try:
         AUTH.update_password(reset_token, new_password)
         return jsonify({"email": email, "message": "Password updated"}), 200
