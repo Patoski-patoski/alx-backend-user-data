@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+"""main module"""
+
 import requests
 
 
@@ -51,8 +54,8 @@ def log_out(session_id: str) -> None:
 
 
 def reset_password_token(email: str) -> str:
-    response = requests.post(url=endpoints["reset_password"], data=     {"email": email}
-    )
+    response = requests.post(
+        url=endpoints["reset_password"], data={"email": email})
     assert response.status_code == 200
 
 
