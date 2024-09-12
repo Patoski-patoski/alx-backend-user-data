@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """app module"""
 
-from auth import Auth
+from auth import Auth, NoResultFound
 from flask import Flask, jsonify, request, abort, redirect, url_for
 
 app = Flask(__name__)
@@ -70,6 +70,17 @@ def profile():
         abort(403)
     else:
         return jsonify({"email": user.email}), 200
+
+
+@app.route("/reset_password", methods=["POST"], strict_slashes=False)
+def get_reset_password_token():
+    """get_reset_password_token"""
+    try:
+        email = request.form.get("email")
+        reset_token = AUTH.get_reset_password_token(email)
+        return jsonify({"email": email, "reset_token": reset_token}), 200
+    except ValueError:
+        abort(403)
 
 
 if __name__ == "__main__":
