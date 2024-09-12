@@ -91,7 +91,7 @@ def update_password():
     reset_token = request.form.get("reset_token")
 
     if not email or new_password or reset_token:
-        abort(400)
+        abort(403)
     try:
         user = AUTH._db.find_user_by(email=email)
         if user.reset_token != reset_token or user.reset_token is None:
