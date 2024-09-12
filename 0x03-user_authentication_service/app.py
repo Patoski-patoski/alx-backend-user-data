@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """app module"""
 
-from auth import Auth, NoResultFound
+from auth import Auth
 from flask import Flask, jsonify, request, abort, redirect, url_for
 
 app = Flask(__name__)
@@ -84,19 +84,14 @@ def get_reset_password_token():
 
 
 @app.route("/reset_password", methods=["PUT"], strict_slashes=False)
-def update_password():
-    """update user password"""
+def update_password() -> str:
+    """Update password"""
     email = request.form.get("email")
-    new_password = request.form.get("new_password")
-    reset_token = request.form.get("reset_token")
-
-    if not email or new_password or reset_token:
-        abort(403)
+    token = request.form.get("reset_token")
+    password = request.form.get("new_password")
     try:
-        AUTH.update_password(reset_token, new_password)
+        AUTH.update_password(token, password)
         return jsonify({"email": email, "message": "Password updated"}), 200
-    except NoResultFound:
-        abort(403)
     except ValueError:
         abort(403)
 
