@@ -57,6 +57,16 @@ def reset_password_token(email: str) -> str:
     response = requests.post(
         url=endpoints["reset_password"], data={"email": email})
     assert response.status_code == 200
+    return response.json().get("reset_token")
+
+
+def update_password(email: str, reset_token: str, new_password: str) -> None:
+    response = requests.get(
+        url=endpoints["reset_password"],
+        data={"email": email, "new_password": new_password,
+              "reset_token": reset_token},
+    )
+    assert response.status_code == 200
 
 
 EMAIL = "guillaume@holberton.io"
@@ -72,5 +82,5 @@ if __name__ == "__main__":
     profile_logged(session_id)
     log_out(session_id)
     reset_token = reset_password_token(EMAIL)
-    # update_password(EMAIL, reset_token, NEW_PASSWD)
-    # log_in(EMAIL, NEW_PASSWD)
+    update_password(EMAIL, reset_token, NEW_PASSWD)
+    log_in(EMAIL, NEW_PASSWD)
