@@ -38,13 +38,14 @@ def login() -> str:
     password = request.form.get("password")
 
     if email and password:
-            AUTH.valid_login(email, password)
-            session_id = AUTH.create_session(email)
-            response = jsonify({"email": email, "message": "logged in"})
-            response.set_cookie("session_id", session_id)
-            return response
+        AUTH.valid_login(email, password)
+        session_id = AUTH.create_session(email)
+        response = jsonify({"email": email, "message": "logged in"})
+        response.set_cookie("session_id", session_id)
+        return response
     else:
-            abort(401)
+        abort(401)
+
 
 @app.route("/sessions", methods=["DELETE"], strict_slashes=False)
 def logout():
