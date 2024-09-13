@@ -132,6 +132,7 @@ class Auth:
         try:
             user = self._db.find_user_by(reset_token=reset_token)
             user.password = _hash_password(password)
+            user.reset_token = None
             self._db._session.commit()
         except NoResultFound:
             error_token = f"User with reset_token {reset_token} does not exist"
